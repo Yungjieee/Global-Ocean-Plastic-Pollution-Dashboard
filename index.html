@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uncovering Ocean Waste: Plastic Pollution Across the Seas (2015)</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f6f6ff;
+      color: #333;
+    }
+    .header {
+      background: #7b4fe0;
+      color: #fff;
+      padding: 2.5rem 0 2rem 0;
+      box-shadow: 0 2px 16px rgba(123, 79, 224, 0.18);
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      position: relative;
+      min-height: 120px;
+      margin-bottom: 2rem;
+    }
+    .header-logo {
+      width: 70px;
+      height: 70px;
+      margin-left: 3rem;
+      margin-right: 1.5rem;
+      background: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(123, 79, 224, 0.12);
+      object-fit: contain;
+    }
+    .header-text {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    .header-text h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      font-weight: bold;
+      text-align: left;
+    }
+    .header-text p {
+      margin: 0.5rem 0 0 0;
+      font-size: 1.1rem;
+      font-weight: 400;
+      text-align: left;
+    }
+    .dashboard-container {
+      display: flex;
+      max-width: 1400px;
+      margin: 0 auto 2rem auto;
+      gap: 2rem;
+      padding: 0 1rem;
+      align-items: stretch;
+    }
+    .main-content {
+      flex: 3;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      height: 100%;
+    }
+    .cards-row {
+      display: flex;
+      gap: 1.5rem;
+    }
+    .card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 6px 24px rgba(123, 79, 224, 0.18), 0 1.5px 4px rgba(106, 44, 199, 0.10);
+      border: 1px solid #6a2cc7;
+      padding: 1.2rem 2rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 190px;
+      max-width: 250px;
+      transition: box-shadow 0.2s;
+    }
+    .card-title {
+      font-size: 0.8rem;
+      color: #7b4fe0;
+      margin-bottom: 0.5rem;
+      text-align: center;
+      font-weight: 600;
+    }
+    .card-value {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #5e2cd3;
+      text-align: center;
+    }
+    .charts-row {
+      display: flex;
+      gap: 1.5rem;
+    }
+    /* .chart-placeholder {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 6px 24px rgba(123, 79, 224, 0.18), 0 1.5px 4px rgba(106, 44, 199, 0.10);
+      border: 1px solid #6a2cc7;
+      flex: 1;
+      height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #bbb;
+      font-size: 1.2rem;
+      transition: box-shadow 0.2s;
+    } */
+    .full-width-placeholder {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 6px 24px rgba(123, 79, 224, 0.18), 0 1.5px 4px rgba(106, 44, 199, 0.10);
+      border: 1px solid #6a2cc7;
+      height: 340px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #bbb;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      transition: box-shadow 0.2s;
+    }
+    .filter-panel {
+      background: #f3edff;
+      border-radius: 18px;
+      box-shadow: 0 6px 24px rgba(123, 79, 224, 0.18), 0 1.5px 4px rgba(106, 44, 199, 0.10);
+      border: 1px solid #6a2cc7;
+      padding: 2rem 1.5rem;
+      min-width: 260px;
+      max-width: 340px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      transition: box-shadow 0.2s;
+    }
+    .filter-height {
+      min-height: 675px;
+    }
+    .summary-height {
+      min-height: 395px;
+    }
+    .info-height {
+      min-height: 1000px;
+    }
+    .filter-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #7b4fe0;
+      margin-bottom: 1rem;
+    }
+    .filter-group {
+      margin-bottom: 1.5rem;
+    }
+    .filter-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #555;
+      font-size: 1rem;
+    }
+    .filter-input, .filter-select {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid #d1c4e9;
+      font-size: 1rem;
+      background: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .category-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.98rem;
+    }
+    .category-table th, .category-table td {
+      padding: 0.5rem 0.7rem;
+      text-align: left;
+    }
+    .category-table th {
+      color: #7b4fe0;
+      font-weight: 600;
+      border-bottom: 2px solid #e0d7fa;
+    }
+    .category-table td {
+      border-bottom: 1px solid #e0d7fa;
+    }
+    @media (max-width: 1000px) {
+      .dashboard-container {
+        flex-direction: column;
+      }
+      .main-content, .filter-panel {
+        max-width: 100%;
+      }
+      .charts-row {
+        flex-direction: column;
+      }
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding-left: 1.5rem;
+      }
+      .header-logo {
+        margin-left: 0;
+        margin-bottom: 1rem;
+      }
+    }
+    /* Custom noUiSlider purple theme */
+    #depth-range-slider .noUi-connect {
+      background: linear-gradient(90deg, #7b4fe0 0%, #a084e8 100%);
+    }
+    #depth-range-slider .noUi-handle {
+      border: 3px solid #7b4fe0;
+      background: #fff;
+      box-shadow: 0 2px 8px #7b4fe033;
+    }
+    #depth-range-slider .noUi-handle:before, #depth-range-slider .noUi-handle:after {
+      background: #7b4fe0;
+    }
+    #depth-range-slider .noUi-handle {
+      width: 28px;
+      height: 28px;
+      top: -12px;
+    }
+    #depth-range-slider .noUi-base {
+      height: 6px;
+    }
+    #depth-range-slider {
+      margin-bottom: 0.2rem;
+    }
+    .sidebar-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-width: 260px;
+      max-width: 340px;
+      flex: 1;
+      align-items: normal;
+    }
+    .summary-height .filter-group,
+    .info-height .filter-group {
+      /* text-align: justify; */
+      line-height: 1.5;
+    }
+    .nav-btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+      margin: 0 2rem 2rem 0;
+    }
+    .nav-btn {
+      background: #fff;
+      color: #7b4fe0;
+      border: 2px solid #7b4fe0;
+      border-radius: 8px;
+      padding: 0.6em 1.6em;
+      font-size: 1.08em;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+      box-shadow: 0 2px 8px rgba(123, 79, 224, 0.08);
+    }
+    .nav-btn:hover, .nav-btn.active {
+      background: #7b4fe0;
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(123, 79, 224, 0.13);
+    }
+  </style>
+  <style>
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      background: #e0e0ef;
+      border-radius: 5px;
+      outline: none;
+      transition: background 0.3s;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid #4f7bff;
+      box-shadow: 0 2px 8px #4f7bff33;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    input[type="range"]:focus::-webkit-slider-thumb {
+      border-color: #7b4fe0;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid #4f7bff;
+      box-shadow: 0 2px 8px #4f7bff33;
+      cursor: pointer;
+    }
+    input[type="range"]:focus::-moz-range-thumb {
+      border-color: #7b4fe0;
+    }
+    input[type="range"]::-ms-thumb {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid #4f7bff;
+      box-shadow: 0 2px 8px #4f7bff33;
+      cursor: pointer;
+    }
+    input[type="range"]:focus::-ms-thumb {
+      border-color: #7b4fe0;
+    }
+    input[type="range"]::-ms-fill-lower {
+      background: #4f7bff;
+    }
+    input[type="range"]::-ms-fill-upper {
+      background: #e0e0ef;
+    }
+    input[type="range"]:focus {
+      outline: none;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+  <div class="header">
+    <div class="header-logo">
+      <!-- Replace src with your logo image path -->
+      <img src="logo.png" alt="Logo" style="width: 48px; height: 48px; border-radius: 50%;" />
+    </div>
+    <div class="header-text">
+      <h1>Uncovering Ocean Waste: Plastic Pollution Across the Seas (2015)</h1>
+      <p>Visualizing the scale, depth, and spread of ocean plastic waste across global waters.</p>
+    </div>
+  </div>
+  <div class="nav-btn-group">
+    <a href="index.html" class="nav-btn active">Dashboard</a>
+    <a href="prediction.html" class="nav-btn">Prediction</a>
+  </div>
+  <div class="dashboard-container">
+    <div class="main-content">
+      <!-- Cards Row -->
+      <div class="cards-row">
+        <div class="card">
+          <div class="card-title">Total Plastic Collected (kg)</div>
+          <div class="card-value">--</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Most Polluted Region</div>
+          <div class="card-value">--</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Deepest Sample (m)</div>
+          <div class="card-value">--</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Most Common Plastic Type</div>
+          <div class="card-value">--</div>
+        </div>
+      </div>
+      <!-- Two Charts Row -->
+      <div class="charts-row">
+        <div style="background: #fff; border-radius: 18px; box-shadow: 0 6px 24px rgba(123, 79, 224, 0.18), 0 1.5px 4px rgba(106, 44, 199, 0.10); border: 1px solid #6a2cc7; flex: 1 1 0; min-width: 0; max-width: none; height: 620px; display: flex; flex-direction: column; padding: 2rem; box-sizing: border-box;">
+          <div style="font-size: 1.2rem; font-weight: 600; color: #7b4fe0; margin-bottom: 1rem; text-align: left;">Plastic Collected by Type and Region</div>
+          <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+            <canvas id="plasticBarChart" width="400" height="400"></canvas>
+          </div>
+        </div>
+        <div style="background: #fff; border-radius: 18px; box-shadow: 0 6px 24px rgba(123, 79, 224, 0.18), 0 1.5px 4px rgba(106, 44, 199, 0.10); border: 1px solid #6a2cc7; flex: 1 1 0; min-width: 0; max-width: none; height: 620px; display: flex; flex-direction: column; padding: 2rem; box-sizing: border-box;">
+          <div style="font-size: 1.2rem; font-weight: 600; color: #7b4fe0; margin-bottom: 1rem; text-align: left;">Plastic Type Percentage (by Weight)</div>
+          <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+            <canvas id="plasticDonutChart" width="320" height="320"></canvas>
+          </div>
+        </div>
+      </div>
+      <!-- Trend Chart Row -->
+      <div style="background: #fff; border-radius: 18px; box-shadow: 0 6px 24px rgba(123, 79, 224, 0.18), 0 1.5px 4px rgba(106, 44, 199, 0.10); border: 1px solid #6a2cc7; width: 100%; height: 480px; display: flex; flex-direction: column; align-items: stretch; justify-content: center; margin-bottom: 0.5rem; padding: 2rem; box-sizing: border-box;">
+        <div style="font-size: 1.2rem; font-weight: 600; color: #7b4fe0; margin-bottom: 1rem; text-align: left;">Plastic Weight Trend Over Year (by Type)</div>
+        <canvas id="plasticLineChart" width="900" height="260"></canvas>
+        <button id="resetZoomBtn" style="margin-top: 1rem; align-self: flex-end; background: #7b4fe0; color: #fff; border: none; border-radius: 8px; padding: 0.5em 1.2em; font-size: 1em; cursor: pointer;">Reset Zoom</button>
+      </div>
+      <!-- Histogram Chart Row -->
+      <div style="background: #fff; border-radius: 18px; box-shadow: 0 6px 24px rgba(123, 79, 224, 0.18), 0 1.5px 4px rgba(106, 44, 199, 0.10); border: 1px solid #6a2cc7; width: 100%; height: 440px; display: flex; flex-direction: column; align-items: stretch; justify-content: center; margin-bottom: 0.5rem; padding: 2rem; box-sizing: border-box;">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <div style="font-size: 1.2rem; font-weight: 600; color: #7b4fe0; margin-bottom: 1rem; text-align: left;">Depth Distribution of Plastic Debris</div>
+          <div style="margin-bottom: 1rem;">
+            <label style="font-size: 1em; color: #7b4fe0; font-weight: 500; margin-right: 0.5em;">Y-Axis:</label>
+            <select id="histogramMode" style="padding: 0.3em 0.8em; border-radius: 8px; border: 1px solid #d1c4e9; font-size: 1em;">
+              <option value="frequency">Frequency</option>
+              <option value="mass">Plastic Mass (kg)</option>
+            </select>
+          </div>
+        </div>
+        <canvas id="depthHistogramChart" width="900" height="260"></canvas>
+      </div>
+      <!-- World Ocean Map Image Row -->
+      <div style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 2rem 0 1rem 0;">
+        <div style="margin-bottom: 0.7rem; color: #7b4fe0; font-size: 1.05rem; font-weight: 500;">World's Oceans Reference Map</div>
+        <img src="world_ocean_map.jpg" alt="World Ocean Map" style="max-width: 100%; height: auto; border-radius: 18px; box-shadow: 0 4px 18px rgba(123, 79, 224, 0.10); border: 1px solid #6a2cc7;" />
+      </div>
+    </div>
+    <div class="sidebar-panel">
+      <div class="filter-panel filter-height">
+        <div class="filter-title">Filters</div>
+        <div class="filter-group">
+          <label class="filter-label" for="month">Month</label>
+          <select class="filter-select" id="month">
+            <option value="All">All</option>
+            <option value="01">January</option>
+            <option value="02">February</option>
+            <option value="03">March</option>
+            <option value="04">April</option>
+            <option value="05">May</option>
+            <option value="06">June</option>
+            <option value="07">July</option>
+            <option value="08">August</option>
+            <option value="09">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label" for="region">Region</label>
+          <select class="filter-select" id="region">
+            <option value="All">All</option>
+            <option value="Atlantic Ocean">Atlantic Ocean</option>
+            <option value="Pacific Ocean">Pacific Ocean</option>
+            <option value="Indian Ocean">Indian Ocean</option>
+            <option value="Arctic Ocean">Arctic Ocean</option>
+            <option value="Southern Ocean">Southern Ocean</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label" for="plastic-type">Plastic Type</label>
+          <select class="filter-select" id="plastic-type">
+            <option value="All">All</option>
+            <option value="Polyethylene Terephthalate (PET)">Polyethylene Terephthalate (PET)</option>
+            <option value="Polyethylene (PE)">Polyethylene (PE)</option>
+            <option value="Polystyrene (PS)">Polystyrene (PS)</option>
+            <option value="Polypropylene (PP)">Polypropylene (PP)</option>
+            <option value="Polyvinyl Chloride (PVC)">Polyvinyl Chloride (PVC)</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label" for="depth-range-slider">Depth Range (m)</label>
+          <div id="depth-range-slider" style="margin: 20px auto 0 auto; width: 80%; max-width: 220px;"></div>
+          <div style="margin-top: 1.2rem; text-align: center;">
+            <span id="depth-range-value" style="display:inline-block; background:#fff; border-radius:10px; padding:0.3em 0.8em; font-size:1.1em; box-shadow:0 1px 4px #ddd;">0 - 100</span>
+          </div>
+        </div>
+      </div>
+      <!-- Summary Panel -->
+      <div class="filter-panel summary-height" style="margin-top: 2rem;">
+        <div class="filter-title">Dashboard Insights</div>
+        <div class="filter-group">
+          <strong>Key Insights:</strong><br>
+          This dashboard visualizes the distribution and types of plastic pollution across the world's oceans in 2015. Use the filters to explore how plastic waste varies by region, type, depth, and month across the year. The charts highlight the most polluted regions, the most common plastic types, and trends in plastic collection, helping to identify critical areas and patterns for ocean conservation efforts.
+        </div>
+      </div>
+      <!-- Info Panel for 5 Oceans -->
+      <div class="filter-panel info-height" style="margin-top: 2rem;">
+        <div class="filter-title">About the World's 5 Oceans</div>
+        <div class="filter-group">
+          <strong>Pacific Ocean</strong><br>
+          The largest and deepest ocean, covering more than 30% of the Earth's surface. It stretches from Asia and Australia to the Americas.
+        </div>
+        <div class="filter-group">
+          <strong>Atlantic Ocean</strong><br>
+          The second-largest ocean, separating the Americas from Europe and Africa. Known for its busy shipping routes and historical significance.
+        </div>
+        <div class="filter-group">
+          <strong>Indian Ocean</strong><br>
+          The third-largest ocean, bordered by Africa, Asia, Australia, and the Indian subcontinent. It is vital for trade and monsoon weather patterns.
+        </div>
+        <div class="filter-group">
+          <strong>Southern Ocean</strong><br>
+          Encircling Antarctica, this ocean is the newest defined and is crucial for global ocean circulation and climate regulation.
+        </div>
+        <div class="filter-group">
+          <strong>Arctic Ocean</strong><br>
+          The smallest and shallowest ocean, located around the North Pole. It is covered by sea ice for most of the year and is sensitive to climate change.
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Chart.js datalabels plugin -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+<!-- PapaParse CDN for CSV parsing -->
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/nouislider@15.7.1/dist/nouislider.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
+<script>
+let allData = [];
+let barChart = null;
+let donutChart = null;
+let lineChart = null;
+let depthHistogramChart = null;
+
+function updateDashboard(filteredData) {
+  // --- KPI CALCULATIONS ---
+  let totalPlastic = 0;
+  const regionTotals = {};
+  let maxDepth = 0;
+  const typeTotals = {};
+  filteredData.forEach(row => {
+    const weight = parseFloat(row.Plastic_Weight_kg || 0);
+    const region = row.Region;
+    const type = row.Plastic_Type;
+    const depth = parseFloat(row.Depth_meters || 0);
+    totalPlastic += weight;
+    if (region) regionTotals[region] = (regionTotals[region] || 0) + weight;
+    if (type) typeTotals[type] = (typeTotals[type] || 0) + weight;
+    if (!isNaN(depth) && depth > maxDepth) maxDepth = depth;
+  });
+  // Find most polluted region
+  let mostPollutedRegion = '';
+  let maxRegionWeight = 0;
+  for (const [region, weight] of Object.entries(regionTotals)) {
+    if (weight > maxRegionWeight) {
+      maxRegionWeight = weight;
+      mostPollutedRegion = region;
+    }
+  }
+  // Find most common plastic type
+  let mostCommonType = '';
+  let maxTypeWeight = 0;
+  for (const [type, weight] of Object.entries(typeTotals)) {
+    if (weight > maxTypeWeight) {
+      maxTypeWeight = weight;
+      mostCommonType = type;
+    }
+  }
+  // Format numbers
+  function formatNumber(num, decimals = 0) {
+    return num.toLocaleString(undefined, { maximumFractionDigits: decimals });
+  }
+  // Update KPI cards
+  const cardValues = document.querySelectorAll('.card-value');
+  if (cardValues.length >= 4) {
+    cardValues[0].textContent = formatNumber(totalPlastic, 0);
+    cardValues[1].textContent = mostPollutedRegion;
+    cardValues[2].textContent = formatNumber(maxDepth, 2);
+    cardValues[3].textContent = mostCommonType;
+  }
+  // --- CHART CODE ---
+  const regions = [...new Set(filteredData.map(row => row.Region))];
+  const plasticTypes = [...new Set(filteredData.map(row => row.Plastic_Type))];
+  const colorMap = {
+    'Polyethylene Terephthalate (PET)': '#e74c3c',
+    'Polyethylene (PE)': '#f39c12',
+    'Polystyrene (PS)': '#2980ef',
+    'Polypropylene (PP)': '#27ae60',
+    'Polyvinyl Chloride (PVC)': '#8e44ad'
+  };
+  // Grouped bar chart data
+  const grouped = {};
+  plasticTypes.forEach(type => {
+    grouped[type] = regions.map(region => {
+      return filteredData.filter(row => row.Region === region && row.Plastic_Type === type)
+        .reduce((sum, row) => sum + parseFloat(row.Plastic_Weight_kg || 0), 0);
+    });
+  });
+  const barDatasets = plasticTypes.map((type, idx) => ({
+    label: type,
+    data: grouped[type],
+    backgroundColor: colorMap[type] || `hsl(${idx * 360 / plasticTypes.length}, 70%, 60%)`,
+  }));
+  // Update or create bar chart
+  if (barChart) barChart.destroy();
+  barChart = new Chart(document.getElementById('plasticBarChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: regions,
+      datasets: barDatasets
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'top' }
+      },
+      layout: { padding: 0 },
+      scales: {
+        x: { stacked: false, title: { display: true, text: 'Region' } },
+        y: { beginAtZero: true, title: { display: true, text: 'Plastic Weight (kg)' } }
+      }
+    }
+  });
+  // Donut chart data
+  const donutLabels = plasticTypes;
+  const donutData = plasticTypes.map(type => typeTotals[type] || 0);
+  const donutColors = plasticTypes.map(type => colorMap[type] || '#ccc');
+  if (donutChart) donutChart.destroy();
+  donutChart = new Chart(document.getElementById('plasticDonutChart').getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: donutLabels,
+      datasets: [{
+        data: donutData,
+        backgroundColor: donutColors,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'top' },
+        datalabels: {
+          color: '#FFFFFF',
+          font: { weight: 'bold', size: 14 },
+          formatter: function(value, context) {
+            const total = donutData.reduce((a, b) => a + b, 0);
+            const percent = total ? (value / total * 100) : 0;
+            return percent.toFixed(1) + '%';
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const label = context.label || '';
+              const value = context.raw || 0;
+              const total = donutData.reduce((a, b) => a + b, 0);
+              const percent = total ? (value / total * 100).toFixed(2) : 0;
+              return `${label}: ${value.toLocaleString()} kg (${percent}%)`;
+            }
+          }
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+
+  // --- LINE CHART: Trend Over Time by Plastic Type ---
+  // Group data by month and plastic type
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  const dateToMonthIdx = row => {
+    if (!row.Date) return -1;
+    const parts = row.Date.split('-');
+    if (parts.length < 2) return -1;
+    return parseInt(parts[1], 10) - 1; // 0-based month
+  };
+  const monthTotalsByType = {};
+  plasticTypes.forEach(type => {
+    monthTotalsByType[type] = Array(12).fill(0);
+  });
+  filteredData.forEach(row => {
+    const monthIdx = dateToMonthIdx(row);
+    const type = row.Plastic_Type;
+    if (type && monthIdx >= 0 && monthIdx < 12) {
+      monthTotalsByType[type][monthIdx] += parseFloat(row.Plastic_Weight_kg || 0);
+    }
+  });
+  const lineDatasets = plasticTypes.map((type, idx) => ({
+    label: type,
+    data: monthTotalsByType[type],
+    borderColor: colorMap[type] || `hsl(${idx * 360 / plasticTypes.length}, 70%, 50%)`,
+    backgroundColor: colorMap[type] || `hsl(${idx * 360 / plasticTypes.length}, 70%, 80%)`,
+    fill: false,
+    tension: 0.2,
+    pointRadius: 3,
+    pointHoverRadius: 6
+  }));
+  if (lineChart) lineChart.destroy();
+  lineChart = new Chart(document.getElementById('plasticLineChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: monthNames,
+      datasets: lineDatasets
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'top' },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.dataset.label}: ${context.parsed.y.toLocaleString()} kg`;
+            }
+          }
+        },
+        zoom: {
+          pan: {
+            enabled: true,
+            mode: 'x',
+            modifierKey: 'ctrl',
+          },
+          zoom: {
+            wheel: {
+              enabled: true,
+            },
+            pinch: {
+              enabled: true
+            },
+            mode: 'x',
+          }
+        }
+      },
+      scales: {
+        x: { title: { display: true, text: 'Month' } },
+        y: { beginAtZero: true, title: { display: true, text: 'Plastic Weight (kg)' } }
+      }
+    }
+  });
+  // Reset zoom button
+  document.getElementById('resetZoomBtn').onclick = function() {
+    if (lineChart) lineChart.resetZoom();
+  };
+
+  // --- HISTOGRAM CHART: Depth Distribution ---
+  // Bin depths (e.g., 0-10, 10-20, ..., 90-100, >100)
+  const binSize = 10;
+  const histMaxDepth = 100;
+  const bins = [];
+  for (let i = 0; i < histMaxDepth; i += binSize) {
+    bins.push({ label: `${i}-${i+binSize}`, min: i, max: i+binSize });
+  }
+  bins.push({ label: `>${histMaxDepth}`, min: histMaxDepth, max: Infinity });
+  // Prepare data for both frequency and mass
+  const freqCounts = Array(bins.length).fill(0);
+  const massCounts = Array(bins.length).fill(0);
+  filteredData.forEach(row => {
+    const depth = parseFloat(row.Depth_meters || 0);
+    const weight = parseFloat(row.Plastic_Weight_kg || 0);
+    for (let i = 0; i < bins.length; i++) {
+      if (depth >= bins[i].min && depth < bins[i].max) {
+        freqCounts[i] += 1;
+        massCounts[i] += weight;
+        break;
+      }
+    }
+  });
+  // Get selected mode
+  const mode = document.getElementById('histogramMode')?.value || 'frequency';
+  const yData = mode === 'mass' ? massCounts : freqCounts;
+  const yLabel = mode === 'mass' ? 'Plastic Mass (kg)' : 'Frequency';
+  // Draw histogram
+  if (depthHistogramChart) depthHistogramChart.destroy();
+  depthHistogramChart = new Chart(document.getElementById('depthHistogramChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: bins.map(b => b.label),
+      datasets: [{
+        label: yLabel,
+        data: yData,
+        backgroundColor: '#7b4fe0',
+        borderRadius: 6,
+        maxBarThickness: 38
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              if (mode === 'mass') {
+                return `Plastic Mass: ${context.parsed.y.toLocaleString()} kg`;
+              } else {
+                return `Frequency: ${context.parsed.y}`;
+              }
+            }
+          }
+        }
+      },
+      scales: {
+        x: { title: { display: true, text: 'Depth (meters)' } },
+        y: { beginAtZero: true, title: { display: true, text: yLabel } }
+      }
+    }
+  });
+}
+
+// Fetch and initialize data
+fetch('data/ocean_plastic_pollution_data_2015.csv')
+  .then(response => response.text())
+  .then(csv => {
+    Papa.parse(csv, {
+      header: true,
+      skipEmptyLines: true,
+      complete: function(results) {
+        allData = results.data;
+        updateDashboard(allData);
+      }
+    });
+  });
+
+// Filter by all options
+function getFilteredData() {
+  const selectedMonth = document.getElementById('month').value;
+  const selectedRegion = document.getElementById('region').value;
+  const selectedType = document.getElementById('plastic-type').value;
+  // Use noUiSlider for depth range
+  const depthSlider = document.getElementById('depth-range-slider');
+  const [minDepthVal, maxDepthVal] = depthSlider.noUiSlider.get().map(Number);
+  return allData.filter(row => {
+    // Month filter
+    if (selectedMonth !== 'All') {
+      const dateStr = row.Date || '';
+      const month = dateStr.split('-')[1];
+      if (month !== selectedMonth) return false;
+    }
+    // Region filter
+    if (selectedRegion !== 'All' && row.Region !== selectedRegion) return false;
+    // Plastic type filter
+    if (selectedType !== 'All' && row.Plastic_Type !== selectedType) return false;
+    // Depth filter (noUiSlider)
+    if (row.Depth_meters !== undefined && row.Depth_meters !== null && row.Depth_meters !== "") {
+      const depth = parseFloat(row.Depth_meters);
+      if (depth < Math.min(minDepthVal, maxDepthVal) || depth > Math.max(minDepthVal, maxDepthVal)) return false;
+    }
+    return true;
+  });
+}
+
+function updateAllFilters() {
+  updateDashboard(getFilteredData());
+}
+
+document.getElementById('month').addEventListener('change', updateAllFilters);
+document.getElementById('region').addEventListener('change', updateAllFilters);
+document.getElementById('plastic-type').addEventListener('change', updateAllFilters);
+
+// --- noUiSlider for dual range slider ---
+const depthSlider = document.getElementById('depth-range-slider');
+noUiSlider.create(depthSlider, {
+  start: [0, 100],
+  connect: true,
+  range: {
+    'min': 0,
+    'max': 100
+  },
+  step: 1,
+  tooltips: false
+});
+const rangeValue = document.getElementById('depth-range-value');
+depthSlider.noUiSlider.on('update', function(values, handle) {
+  const minVal = Math.round(values[0]);
+  const maxVal = Math.round(values[1]);
+  rangeValue.textContent = `${minVal} - ${maxVal}`;
+  updateAllFilters();
+});
+
+// Add event listener for histogram mode toggle
+document.getElementById('histogramMode').addEventListener('change', updateAllFilters);
+</script>
+</html> 
