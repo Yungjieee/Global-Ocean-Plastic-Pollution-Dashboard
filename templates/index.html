@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Uncovering Ocean Waste: Plastic Pollution Across the Seas (2015)</title>
+  <title>Uncovering Ocean Waste: Plastic Pollution Across the Seas (2015-2016)</title>
   <style>
     body {
       margin: 0;
@@ -345,16 +345,16 @@
   <div class="header">
     <div class="header-logo">
       <!-- Replace src with your logo image path -->
-      <img src="logo.png" alt="Logo" style="width: 48px; height: 48px; border-radius: 50%;" />
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" style="width: 48px; height: 48px; border-radius: 50%;" />
     </div>
     <div class="header-text">
-      <h1>Uncovering Ocean Waste: Plastic Pollution Across the Seas (2015)</h1>
+      <h1>Uncovering Ocean Waste: Plastic Pollution Across the Seas (2015-2016)</h1>
       <p>Visualizing the scale, depth, and spread of ocean plastic waste across global waters.</p>
     </div>
   </div>
   <div class="nav-btn-group">
-    <a href="index.html" class="nav-btn active">Dashboard</a>
-    <a href="prediction.html" class="nav-btn">Prediction</a>
+    <a href="{{ url_for('index') }}" class="nav-btn {% if active_page == 'index' %}active{% endif %}">Dashboard</a>
+    <a href="{{ url_for('prediction') }}" class="nav-btn {% if active_page == 'prediction' %}active{% endif %}">Prediction</a>
   </div>
   <div class="dashboard-container">
     <div class="main-content">
@@ -415,12 +415,20 @@
       <!-- World Ocean Map Image Row -->
       <div style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 2rem 0 1rem 0;">
         <div style="margin-bottom: 0.7rem; color: #7b4fe0; font-size: 1.05rem; font-weight: 500;">World's Oceans Reference Map</div>
-        <img src="world_ocean_map.jpg" alt="World Ocean Map" style="max-width: 100%; height: auto; border-radius: 18px; box-shadow: 0 4px 18px rgba(123, 79, 224, 0.10); border: 1px solid #6a2cc7;" />
+        <img src="{{ url_for('static', filename='images/world_ocean_map.jpg') }}" alt="World Ocean Map" style="max-width: 100%; height: auto; border-radius: 18px; box-shadow: 0 4px 18px rgba(123, 79, 224, 0.10); border: 1px solid #6a2cc7;" />
       </div>
     </div>
     <div class="sidebar-panel">
       <div class="filter-panel filter-height">
         <div class="filter-title">Filters</div>
+        <div class="filter-group">
+          <label class="filter-label" for="year">Year</label>
+          <select class="filter-select" id="year">
+            <option value="All">All</option>
+            <option value="2015">2015</option>
+            <option value="2016">2016</option>
+          </select>
+        </div>
         <div class="filter-group">
           <label class="filter-label" for="month">Month</label>
           <select class="filter-select" id="month">
@@ -474,7 +482,7 @@
         <div class="filter-title">Dashboard Insights</div>
         <div class="filter-group">
           <strong>Key Insights:</strong><br>
-          This dashboard visualizes the distribution and types of plastic pollution across the world's oceans in 2015. Use the filters to explore how plastic waste varies by region, type, depth, and month across the year. The charts highlight the most polluted regions, the most common plastic types, and trends in plastic collection, helping to identify critical areas and patterns for ocean conservation efforts.
+          This dashboard visualizes the distribution and types of plastic pollution across the world's oceans in 2015 and 2016. Use the filters to explore how plastic waste varies by region, type, depth, year, and month across the two years. The charts highlight the most polluted regions, the most common plastic types, and trends in plastic collection, helping to identify critical areas and patterns for ocean conservation efforts.
         </div>
       </div>
       <!-- Info Panel for 5 Oceans -->
@@ -652,31 +660,62 @@ function updateDashboard(filteredData) {
   });
 
   // --- LINE CHART: Trend Over Time by Plastic Type ---
-  // Group data by month and plastic type
-  const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+  // Group data by month-year and plastic type
+  const monthNamesShort = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
   ];
-  const dateToMonthIdx = row => {
-    if (!row.Date) return -1;
-    const parts = row.Date.split('-');
-    if (parts.length < 2) return -1;
-    return parseInt(parts[1], 10) - 1; // 0-based month
-  };
-  const monthTotalsByType = {};
+  // Get all unique month-year pairs in the filtered data, sorted
+  const monthYearSet = new Set();
+  filteredData.forEach(row => {
+    const dateStr = row.Date || '';
+    const parts = dateStr.split('-');
+    if (parts.length < 3) return;
+    const day = parts[0];
+    const month = parts[1];
+    const yearPart = parts[2].split(' ')[0];
+    const year = '20' + yearPart;
+    if (month && year) {
+      monthYearSet.add(`${month}-${year}`);
+    }
+  });
+  // Sort month-year labels chronologically
+  const monthYearLabels = Array.from(monthYearSet).sort((a, b) => {
+    const [ma, ya] = a.split('-');
+    const [mb, yb] = b.split('-');
+    if (ya !== yb) return ya - yb;
+    return ma - mb;
+  });
+  // Convert to 'Mon YYYY' format
+  const monthYearDisplayLabels = monthYearLabels.map(label => {
+    const [month, year] = label.split('-');
+    const monthIdx = parseInt(month, 10) - 1;
+    return `${monthNamesShort[monthIdx]} ${year}`;
+  });
+  // Prepare data grouped by month-year and plastic type
+  const monthYearIndexMap = {};
+  monthYearLabels.forEach((label, idx) => { monthYearIndexMap[label] = idx; });
+  const monthYearTotalsByType = {};
   plasticTypes.forEach(type => {
-    monthTotalsByType[type] = Array(12).fill(0);
+    monthYearTotalsByType[type] = Array(monthYearLabels.length).fill(0);
   });
   filteredData.forEach(row => {
-    const monthIdx = dateToMonthIdx(row);
+    const dateStr = row.Date || '';
+    const parts = dateStr.split('-');
+    if (parts.length < 3) return;
+    const month = parts[1];
+    const yearPart = parts[2].split(' ')[0];
+    const year = '20' + yearPart;
+    const label = `${month}-${year}`;
+    const idx = monthYearIndexMap[label];
     const type = row.Plastic_Type;
-    if (type && monthIdx >= 0 && monthIdx < 12) {
-      monthTotalsByType[type][monthIdx] += parseFloat(row.Plastic_Weight_kg || 0);
+    if (type && idx !== undefined) {
+      monthYearTotalsByType[type][idx] += parseFloat(row.Plastic_Weight_kg || 0);
     }
   });
   const lineDatasets = plasticTypes.map((type, idx) => ({
     label: type,
-    data: monthTotalsByType[type],
+    data: monthYearTotalsByType[type],
     borderColor: colorMap[type] || `hsl(${idx * 360 / plasticTypes.length}, 70%, 50%)`,
     backgroundColor: colorMap[type] || `hsl(${idx * 360 / plasticTypes.length}, 70%, 80%)`,
     fill: false,
@@ -688,7 +727,7 @@ function updateDashboard(filteredData) {
   lineChart = new Chart(document.getElementById('plasticLineChart').getContext('2d'), {
     type: 'line',
     data: {
-      labels: monthNames,
+      labels: monthYearDisplayLabels,
       datasets: lineDatasets
     },
     options: {
@@ -720,7 +759,7 @@ function updateDashboard(filteredData) {
         }
       },
       scales: {
-        x: { title: { display: true, text: 'Month' } },
+        x: { title: { display: true, text: 'Month-Year' } },
         y: { beginAtZero: true, title: { display: true, text: 'Plastic Weight (kg)' } }
       }
     }
@@ -796,28 +835,46 @@ function updateDashboard(filteredData) {
 }
 
 // Fetch and initialize data
-fetch('data/ocean_plastic_pollution_data_2015.csv')
-  .then(response => response.text())
-  .then(csv => {
-    Papa.parse(csv, {
-      header: true,
-      skipEmptyLines: true,
-      complete: function(results) {
-        allData = results.data;
-        updateDashboard(allData);
-      }
-    });
+fetch('/data')
+  .then(response => response.json())
+  .then(data => {
+    allData = data;
+    updateDashboard(allData);
   });
 
 // Filter by all options
 function getFilteredData() {
+  const selectedYear = document.getElementById('year').value;
   const selectedMonth = document.getElementById('month').value;
   const selectedRegion = document.getElementById('region').value;
   const selectedType = document.getElementById('plastic-type').value;
   // Use noUiSlider for depth range
   const depthSlider = document.getElementById('depth-range-slider');
   const [minDepthVal, maxDepthVal] = depthSlider.noUiSlider.get().map(Number);
+
+  // Debug: Log first 10 Date values and extracted years
+  const debugDates = allData.slice(0, 10).map(row => row.Date);
+  const debugYears = allData.slice(0, 10).map(row => {
+    const dateStr = row.Date || '';
+    const parts = dateStr.split('-');
+    if (parts.length < 3) return '';
+    const yearPart = parts[2].split(' ')[0];
+    return '20' + yearPart;
+  });
+  console.log('First 10 Date values:', debugDates);
+  console.log('Extracted years:', debugYears);
+  console.log('Selected year:', selectedYear);
+
   return allData.filter(row => {
+    // Year filter
+    if (selectedYear !== 'All') {
+      const dateStr = row.Date || '';
+      const parts = dateStr.split('-');
+      if (parts.length < 3) return false;
+      const yearPart = parts[2].split(' ')[0];
+      const year = '20' + yearPart;
+      if (year !== selectedYear) return false;
+    }
     // Month filter
     if (selectedMonth !== 'All') {
       const dateStr = row.Date || '';
@@ -841,6 +898,7 @@ function updateAllFilters() {
   updateDashboard(getFilteredData());
 }
 
+document.getElementById('year').addEventListener('change', updateAllFilters);
 document.getElementById('month').addEventListener('change', updateAllFilters);
 document.getElementById('region').addEventListener('change', updateAllFilters);
 document.getElementById('plastic-type').addEventListener('change', updateAllFilters);
